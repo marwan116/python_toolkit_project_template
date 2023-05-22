@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "{{ cookiecutter.package_name }}"
+version = "{{ cookiecutter.package_version }}"
+description = "{{ cookiecutter.package_description }}"
+packages = [{ include = "{{ cookiecutter.package_name }}", from = "src" }]
+authors = []
+
+readme = "README.md"
+include = [
+    "README.md",
+    "LICENSE.txt",
+    "src/{{ cookiecutter.package_name }}/py.typed",
+]
+exclude = [
+    "*.so",
+    "*.pyc",
+    "*~",
+    "#*",
+    ".git*",
+    ".coverage*",
+    "DS_Store",
+    "__pycache__",
+]
+
+
+[tool.poetry.dependencies]
+python = ">={{ cookiecutter.package_min_python_version }}, <{{ cookiecutter.package_max_python_version }}"
+
+[tool.poetry.dev-dependencies]
+# type hints
+mypy = "{{ cookiecutter.mypy_version }}"
+# formatting
+
+
+{% if cookiecutter.linter == "flake8" %}
+black = "{{ cookiecutter.black_version }}"
+
+
+{% elif cookiecutter.linter == "ruff" %}
+
+{% endif %}
+# linting
+flake8 = "{{ cookiecutter.flake8_version }}"
+ruff = "{{ cookiecutter.ruff_version }}"
+# import sorting
+isort = "{{ cookiecutter.isort_version }}"
+# testing
+pytest = "{{ cookiecutter.pytest_version }}"
+pytest-sugar = "{{ cookiecutter.pytest_sugar_version }}"
+# on-demand environments
+nox = "{{ cookiecutter.nox_version }}"
+nox-poetry = "{{ cookiecutter.nox_poetry_version }}"
+
+[tool.mypy]
+strict = true
+pretty = true
+show_column_numbers = true
+show_error_codes = true
+show_error_context = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+warn_no_return = false
+allow_untyped_defs = true
+allow_untyped_decorators = true
+
+[tool.isort]
+profile = "black"
+combine_as_imports = true
+known_first_party = ["{{ cookiecutter.package_name }}"]
+order_by_type = false
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
